@@ -1,13 +1,3 @@
-// var express = require('express');
-// var router = express.Router();
-
-// /* GET home page. */
-// router.get('/', function(req, res, next) {
-//   res.render('index', { title: 'Express' });
-// });
-
-// module.exports = router;
-
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
@@ -53,7 +43,8 @@ router.post("/login", async function (req, res, next) {
             return res.status(401).json({ error: "Invalid password" });
         }
 
-        const token = jwt.sign({ id: user._id }, "your_secret_key");
+        const token = jwt.sign({ id: user._id, role: user.role }, "secret");
+
         res.json({ token });
     } catch (error) {
         res.status(500).json({ error: "Error finding user in database" });
@@ -68,7 +59,7 @@ function authenticateToken(req, res, next) {
     const token = req.headers["authorization"];
     if (token == null) return res.sendStatus(401);
 
-    jwt.verify(token, "your_secret_key", (err, user) => {
+    jwt.verify(token, "secret", (err, user) => {
         if (err) return res.sendStatus(403);
         req.user = user;
         next();

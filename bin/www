@@ -8,6 +8,11 @@ var app = require("../app");
 var debug = require("debug")("new-folder:server");
 var http = require("http");
 
+app.use((req, res, next) => {
+    moment.tz.setDefault("Asia/Karachi");
+    next();
+});
+
 /**
  * Get port from environment and store in Express.
  */
